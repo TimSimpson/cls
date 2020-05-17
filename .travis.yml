@@ -8,4 +8,4 @@ install:
   - poetry install
 
 script:
-  - poetry run python run_tests.py
+  - poetry run task lint
