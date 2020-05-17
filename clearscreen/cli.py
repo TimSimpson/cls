@@ -6,6 +6,8 @@ import shutil
 import sys
 import typing as t
 
+import colored  # type: ignore
+
 from . import art as art_module
 
 
@@ -92,7 +94,16 @@ def main() -> None:
         "cls", description="Shows random art to clear the screen."
     )
     parser.add_argument(
-        "--colors", action="store_true", help="use a randon color"
+        "--color",
+        required=False,
+        type=int,
+        default=None,
+        help="Select color from list provided by `colored` package (0-256).",
+    )
+    parser.add_argument(
+        "--drab",
+        action="store_true",
+        help="don't use a random color each time",
     )
     parser.add_argument(
         "--index",
@@ -107,12 +118,29 @@ def main() -> None:
     parser.add_argument(
         "--ls", help="List all the screens", action="store_true"
     )
+    parser.add_argument(
+        "--ls-colors", help="List all colors", action="store_true"
+    )
     args = parser.parse_args()
 
     if args.ls:
         print("Selections:")
         for index, name in screens.names:
-            print(f"\t{index: < 3} {name}")
+            print(f"\t{index: > 3} {name}")
+        sys.exit(0)
+
+    if args.ls_colors:
+        print("Selections:")
+        for index in range(256):
+            print(
+                "\t"
+                + colored.fg(index)
+                + f"{index: > 4} "
+                + colored.style.RESET
+                + colored.bg(index)
+                + " " * 20
+                + colored.style.RESET
+            )
         sys.exit(0)
     try:
         if args.name is not None:
@@ -129,17 +157,16 @@ def main() -> None:
         )
         sys.exit(1)
 
-    if args.colors:
-        # Avoid import errors if user doesn't have this... yeah, tbh I don't
-        # really know how that will happen either.
-        import colored  # type: ignore
-
-        c_index = int(random.random() * 256)
+    if not args.drab:
+        if args.color is None:
+            c_index = int(random.random() * 255)
+        else:
+            c_index = args.color
         print(colored.fg(c_index))
 
     print_art(format_horizontal_lines(art))
 
-    if args.colors:
+    if not args.drab:
         print(colored.style.RESET)
 
 

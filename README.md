@@ -14,3 +14,18 @@ Install with pipx or pipsi or whatever, then run:
     ? pipx install clearscreen
     ? cls
 ```
+
+
+## Change Log
+
+### 0.2.0
+
+Makes showing different colors the default, cause hey why not. Also make the color selectable.
+
+### 0.1.1
+
+Sorts order of files in the internal list to make it easier to find them with `--ls`.
+
+### 0.1.0
+
+First release.
