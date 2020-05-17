@@ -45,9 +45,9 @@ def format_horizontal_lines(lines: t.List[str]) -> t.List[str]:
 class Screens:
     def __init__(self, path: pathlib.Path) -> None:
         self._path = path
-        self._files = [
-            f for f in path.iterdir() if f.is_file() and f.suffix == ".txt"
-        ]
+        self._files = sorted(
+            [f for f in path.iterdir() if f.is_file() and f.suffix == ".txt"]
+        )
 
     def get_by_index(self, index: int) -> t.List[str]:
         if index > len(self._files) - 1:
