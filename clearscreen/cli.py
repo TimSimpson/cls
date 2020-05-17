@@ -1,6 +1,8 @@
 import argparse
+import math
 import pathlib
 import random
+import shutil
 import sys
 import typing as t
 
@@ -26,6 +28,18 @@ def format_vertical_lines(lines: t.List[str]) -> t.List[str]:
         last_non_empty = len(lines)
 
     return [""] + lines[first_non_empty:last_non_empty] + [""]
+
+
+def format_horizontal_lines(lines: t.List[str]) -> t.List[str]:
+    size = shutil.get_terminal_size((80, 20))
+    biggest_line = max([len(line) for line in lines])
+    if biggest_line < size.columns:
+        adjust = size.columns - biggest_line
+    else:
+        adjust = 0
+    adjust = math.floor(adjust / 2) - 1
+    prefix = " " * adjust
+    return [prefix + line for line in lines]
 
 
 class Screens:
@@ -63,10 +77,22 @@ class Screens:
         return self.get_by_index(choice)
 
 
+def print_art(art: t.List[str]) -> None:
+    for index, line in enumerate(art):
+        if index == 0 and line.strip() != "":
+            print()  # add an extra line
+        print(line)
+        if index == len(art) - 1 and line.strip() != "":
+            print()  # add one last line for spacing
+
+
 def main() -> None:
     screens = Screens(pathlib.Path(art_module.__file__).parent)
     parser = argparse.ArgumentParser(
         "cls", description="Shows random art to clear the screen."
+    )
+    parser.add_argument(
+        "--colors", action="store_true", help="use a randon color"
     )
     parser.add_argument(
         "--index",
@@ -103,12 +129,18 @@ def main() -> None:
         )
         sys.exit(1)
 
-    for index, line in enumerate(art):
-        if index == 0 and line.strip() != "":
-            print()  # add an extra line
-        print(line)
-        if index == len(art) - 1 and line.strip() != "":
-            print()  # add one last line for spacing
+    if args.colors:
+        # Avoid import errors if user doesn't have this... yeah, tbh I don't
+        # really know how that will happen either.
+        import colored  # type: ignore
+
+        c_index = int(random.random() * 256)
+        print(colored.fg(c_index))
+
+    print_art(format_horizontal_lines(art))
+
+    if args.colors:
+        print(colored.style.RESET)
 
 
 if __name__ == "__main__":
