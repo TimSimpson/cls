@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clearscreen"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Tim Simpson <timsimpson4@gmail.com>"]
 description = "Draws random ascii art to the screen, making it easier to scroll back and find where you where."
 readme = 'README.md'

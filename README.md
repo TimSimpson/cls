@@ -18,6 +18,10 @@ Install with pipx or pipsi or whatever, then run:
 
 ## Change Log
 
+### 0.2.1
+
+Adds more art.
+
 ### 0.2.0
 
 Makes showing different colors the default, cause hey why not. Also make the color selectable.
